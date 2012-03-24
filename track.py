@@ -2,7 +2,6 @@ from SimpleCV import *
 import glob
 import time
 import numpy
-import decimal
 
 class Track:
     ID = 0
@@ -35,45 +34,61 @@ for file in files:
     # if there are blobs detected
     if blobs:
         for b in blobs:
-            print b.meanColor()
             if not track_list:
-                print 'create a new track'
                 t = Track()
                 track_id = track_id + 1
                 t.ID = track_id
                 # throw out the remainder
+                # meanColor() returns BGR space, so need to reverse to RGB
                 t.color = tuple([int(b.meanColor()) 
                     if isinstance(b.meanColor(), float) else int(x) 
-                    for x in b.meanColor()])
-                print t.color
+                    for x in reversed(b.meanColor())])
                 t.blob_list.append(b)
                 track_list.append(t)
             else:
+                matrix = numpy.zeros((len(track_list), len(blobs)))
                 for i in range(len(track_list)):
                     for j in range(len(blobs)):
                         last_blob_idx = len(track_list[i].blob_list) - 1
-                        if not track_list[i].match:
-                            print 'track #' + str(i)
-                            px = Image((1, 1), ColorSpace.RGB)
+                        matrix[i][j] = get_overlap_area(
+                            track_list[i].blob_list[last_blob_idx].minX(),
+                            track_list[i].blob_list[last_blob_idx].minX(),
+                            track_list[i].blob_list[last_blob_idx].minX(),
+                            track_list[i].blob_list[last_blob_idx].minX(),
+                            blobs[j].minX(), blobs[j].minY(), 
+                            blobs[j].maxX(), blobs[j].maxY())
+                        print matrix[i][j]
 
-                            px[0, 0] = track_list[i].blob_list[last_blob_idx].meanColor()
-                            pxHSV = px.toHSV()
-                            hue1 = pxHSV[0, 0][2]
-                            print 'hue1: ' + str(hue1)
 
-                            px[0, 0] = blobs[j].meanColor()
-                            pxHSV = px.toHSV()
-                            hue2 = pxHSV[0, 0][2]
-                            print 'hue2: ' + str(hue2)
 
-                            color_similarity = get_color_similarity(hue1, hue2)
-                            if color_similarity < 5:
-                                print 'match found'
-                                track_list[i].blob_list.append(blobs[j])
-                                track_list[i].match = True
-                                blobs.pop(j)
 
-        print len(blobs)       
+
+
+
+
+
+                    
+#                        last_blob_idx = len(track_list[i].blob_list) - 1
+#                        if not track_list[i].match:
+#                            print 'track #' + str(i)
+#                            px = Image((1, 1), ColorSpace.RGB)
+#                            px[0, 0] = track_list[i].blob_list[last_blob_idx].meanColor()
+#                            pxHSV = px.toHSV()
+#                            hue1 = pxHSV[0, 0][2]
+#                            print 'hue1: ' + str(hue1)
+#
+#                            px[0, 0] = blobs[j].meanColor()
+#                            pxHSV = px.toHSV()
+#                            hue2 = pxHSV[0, 0][2]
+#                            print 'hue2: ' + str(hue2)
+#
+#                            color_similarity = get_color_similarity(hue1, hue2)
+#                            if color_similarity < 5:
+#                                print 'match found'
+#                                track_list[i].blob_list.append(blobs[j])
+#                                track_list[i].match = True
+#                                blobs.pop(j)
+
 #        for b in blobs:
 #            print 'create a new track'
 #            t = Track()

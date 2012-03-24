@@ -1,6 +1,14 @@
 Simple Appearance-Based Blob Tracking
 ----------------------------------------------------------------------------
 
-Simple Appearance-Based Blob Tracking is a short example of using SimpleCV.
+Simple Appearance-Based Blob Tracking is a short example of using SimpleCV. 
+This example shows a simple idea on tracking multiple objects using an 
+appearance model. The algorithm here can be improved by using a better 
+appearance model or the Kalman filters.
 
+License:
+This work is licensed under a Creative Commons Attribution 3.0 License. You 
+are free to use the code here for any purpose, but please give credit to its 
+source. If you make improvements, I will appreciate it if you send me your 
+updates.
 

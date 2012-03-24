@@ -7,7 +7,7 @@ class Track:
     ID = 0
     color = (0, 0, 0)
     blob_list = []
-    match = False
+    fwd_match = False
 
 def get_overlap_area(minx1, miny1, maxx1, maxy1, minx2, miny2, maxx2, maxy2):
     if minx1 > maxx2 or maxx1 < minx2 or miny1 > maxy2 or maxy1 < miny2:
@@ -59,15 +59,47 @@ for file in files:
                             blobs[j].maxX(), blobs[j].maxY())
                         print matrix[i][j]
 
+                for i in range(len(track_list)):
+                    num_non_zero_in_rows = 0
+                    num_zero_in_rows = 0
+                    for j in range(len(blobs)):
+                        if matrix[i][j] > 0:
+                            num_non_zero_in_rows = num_non_zero_in_rows + 1
+                        else:
+                            num_zero_in_rows = num_zero_in_rows + 1
 
+                    if num_non_zero_in_rows > 1:
+                        px = Image((1, 1), ColorSpace.RGB)
+                        px[0, 0] = track_list[i].blob_list[last_blob_idx].meanColor()
+                        pxHSV = px.toHSV()
+                        hue1 = pxHSV[0, 0][2]
 
+                        px[0, 0] = blobs[j].meanColor()
+                        pxHSV = px.toHSV()
+                        hue2 = pxHSV[0, 0][2]
 
+                        color_similarity = get_color_similarity(hue1, hue2)
+                        if color_similarity < 5:
+#                            track_list[i].blob_list.append(blobs[j])
+                            track_list[i].fwd_match = True
 
+                    elif num_non_zero_in_rows == 1:
+                        track_list[i].fwd_match = True
 
+                for j in range(len(blobs)):
+                    num_non_zero_in_cols = 0
+                    num_zero_in_cols = 0
+                    for i in range(len(track_list)):
+                        if matrix[i][j] > 0:
+                            num_non_zero_in_cols = num_non_zero_in_cols + 1
+                        else:
+                            num_zero_in_cols = num_zero_in_cols + 1
+                   
+                    if num_non_zero_in_cols > 1:
+                        print 'merging'
+                    elif num_non_zero_in_cols == 1:
+                        print 'match'
 
-
-
-                    
 #                        last_blob_idx = len(track_list[i].blob_list) - 1
 #                        if not track_list[i].match:
 #                            print 'track #' + str(i)

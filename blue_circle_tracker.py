@@ -120,33 +120,10 @@ while True:
 
 #    blue_stuff.show()
 
-    for b in blobs:
-        layer = DrawingLayer((img.width, img.height))
-        rect_dim = (b.width(), b.height())
-        center = b.center()
-        layer.centeredRectangle(center, rect_dim, Color.RED)
-        img.addDrawingLayer(layer)
-    
-    img.applyLayers()
-    img.show()
 '''
 '''
     # remove noise then find blobs in the clean image
     blobs = img.morphOpen().morphClose().findBlobs(10)
-
-
-    for t in tracks:
-        last_blob_idx = len(t.blobs) - 1
-        layer = DrawingLayer((img.width, img.height))
-        rect_dim = (t.blobs[last_blob_idx].width(), t.blobs[last_blob_idx].height())
-        center = t.blobs[last_blob_idx].center()
-        layer.centeredRectangle(center, rect_dim, t.color)
-        img.addDrawingLayer(layer)
-    
-    img.applyLayers()
-    img.show()
-
-    raw_input()
 
     img.clearLayers()
     

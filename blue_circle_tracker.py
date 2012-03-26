@@ -23,6 +23,8 @@ overlap_th = 160
 
 while True:
     img = cam.getImage()
+    # if you're using Lenovo Y330, uncomment this line
+    img = img.flipVertical().flipHorizontal()
 
     blue_stuff = img.colorDistance(Color.BLUE)
     bin_blue_stuff = blue_stuff.binarize(130)
@@ -98,9 +100,10 @@ while True:
         img.addDrawingLayer(layer)
     
     img.applyLayers()
+
     img.show()
 
-    time.sleep(0.1)
+    time.sleep(1)
 
 #    print blue_stuff.getNumpy()
 

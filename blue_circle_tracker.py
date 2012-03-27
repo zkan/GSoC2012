@@ -18,24 +18,25 @@ cam = Camera(0)
 
 tracks = []
 overlap_th = 100
+tolerance = 0.3
+min_blob_size = 100
 
-frame = 0
 while True:
     img = cam.getImage()
-    # if you're not using Lenovo Y330, comment this line out
+    # if you're not using Lenovo Y330, comment the line below out
     img = img.flipVertical().flipHorizontal()
-
-    
+    # then binarize it
     blue_stuff = img.colorDistance(Color.BLUE)
     bin_blue_stuff = blue_stuff.binarize(130)
+    # remove noise using morphological opening then closing operation
     clean_bin_blue_stuff = bin_blue_stuff.morphOpen().morphClose()
-
     blobs = clean_bin_blue_stuff.findBlobs()
 
+    # if there are blobs detected
     if blobs:
         if not tracks:
             for b in blobs:
-                if b.isCircle(0.3) and b.area() > 100:
+                if b.isCircle(tolerance) and b.area() > min_blob_size:
                     t = Track()
                     t.color = Color().getRandom()
                     t.blobs.append(b)
@@ -54,8 +55,6 @@ while True:
                             blobs[j].minX(), blobs[j].minY(),
                             blobs[j].maxX(), blobs[j].maxY())
 
-            print matrix
-
             for i in range(len(tracks)):
                 tracks[i].matched_blob_list = []
                 matched_blob_list = []
@@ -68,7 +67,7 @@ while True:
 
             unmatched_blob_list = []
             for j in range(len(blobs)):
-                if blobs[j].isCircle(0.3) and blobs[j].area() > 100:
+                if blobs[j].isCircle(tolerance) and blobs[j].area() > min_blob_size:
                     matched_track_list = []
                     num_zero = 0
                     for i in range(len(tracks)):
@@ -85,7 +84,6 @@ while True:
                         unmatched_blob_list.append(j)
 
             # create new tracks for unmatched blobs
-            print 'unmatched blob list: ' + str(unmatched_blob_list)
             for idx in unmatched_blob_list:
                 t = Track()
                 t.color = Color().getRandom()
@@ -102,13 +100,5 @@ while True:
     
     img.applyLayers()
     img.show()
-
-    file_name = ''
-    if frame < 10:
-        file_name = '00' + str(frame)
-    elif frame < 100:
-        file_name = '0' + str(frame)
-    img.save(file_name + '.jpg')
-    frame = frame + 1
 
     time.sleep(1)

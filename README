@@ -2,6 +2,12 @@ Blue Circle Tracker
 ----------------------------------------------------------------------------
 
 Blue Circle Tracker is a simple program to track any blue circle in a video. 
+This example shows a simple idea on tracking multiple objects using an 
+appearance model. The algorithm here can be improved by using a better 
+appearance model, Kalman filtering, or particle filtering.
+
+
+Demo: http://www.youtube.com/watch?v=icjEyZ605KQ
 
 
 

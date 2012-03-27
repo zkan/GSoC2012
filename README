@@ -1,7 +1,7 @@
-Simple Blue Circle Tracker
+= Simple Blue Circle Tracker =
 ----------------------------------------------------------------------------
 
-Introduction:
+'''Introduction:'''
 Simeple Blue Circle Tracker is a simple program to track any blue circle in 
 a video. The main idea is to construct a overlap area association matrix between 
 the bounding box of blobs and tracks. We can then use the association matrix 
@@ -9,7 +9,7 @@ to link blobs in the current frame with the tracks from the previous frame.
 This code shows a basic idea on tracking multiple objects using an appearance 
 model. 
 
-Possible Future Work:
+'''Possible Future Work:'''
 This code does not handle any occlusion, so it would be great if this feature 
 is implemented. It can also be improved by a better appearance model, Kalman 
 filtering, or particle filtering.
